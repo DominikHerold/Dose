@@ -25,9 +25,12 @@ void setup(){
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED && retry_count < 20)
   {
+	  digitalWrite(D4, LOW);
 	  delay(500);
 	  Serial.print(".");
 	  retry_count++;
+	  digitalWrite(D4, HIGH);
+	  delay(100);
   }
   
   Serial.println(" connected");
@@ -46,9 +49,12 @@ void loop(){
 	  int retry_count = 0;
 	  WiFi.reconnect();
 	  while ((WiFi.status() != WL_CONNECTED) && (retry_count < 20)) {
+		  digitalWrite(D4, LOW);
 		  delay(500);
 		  Serial.print(".");
 		  retry_count++;
+		  digitalWrite(D4, HIGH);
+		  delay(100);
 	  }
 	}
 	last_ping = act_milli;

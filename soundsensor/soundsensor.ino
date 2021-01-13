@@ -1,6 +1,9 @@
 int sound_digital = D5;
 int sound_analog = A0;
- 
+
+unsigned long act_milli;
+unsigned long last_ping;
+
 #include <ESP8266WiFi.h>
 #include "Pushover.h"
  
@@ -32,10 +35,14 @@ void setup(){
   digitalWrite(D4, LOW);
   delay(10000);
   digitalWrite(D4, HIGH);
+
+  last_ping = millis();
 }
 
 void loop(){
-  if (WiFi.status() != WL_CONNECTED) {
+  act_milli = millis();
+  if ((act_milli-last_ping) > (100 * 1000)){
+	if (WiFi.status() != WL_CONNECTED) {
 	  int retry_count = 0;
 	  WiFi.reconnect();
 	  while ((WiFi.status() != WL_CONNECTED) && (retry_count < 20)) {
@@ -43,7 +50,10 @@ void loop(){
 		  Serial.print(".");
 		  retry_count++;
 	  }
+	}
+	last_ping = act_milli;
   }
+  
   // Serial.println("Test");  
   int val_digital = digitalRead(sound_digital);  
   int val_analog = analogRead(sound_analog);
